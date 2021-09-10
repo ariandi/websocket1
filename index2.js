@@ -22,6 +22,7 @@ cron.schedule('*/15 * * * * *', async function() {
             {
               biller_status: 'pending',
               status: 0,
+              balance_type: 5,
               created_at: {
                 [Op.gt]: moment().subtract(2, 'days').toDate()
               }
