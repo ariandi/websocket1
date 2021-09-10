@@ -12,15 +12,15 @@ const io = require("socket.io")(server, {
 });
 
 // Option 2: Passing parameters separately (other dialects)
-// const sequelize = new Sequelize('ari_ppobdb', 'ari_ppobuser', 'fiora123', {
-//   host: '157.230.43.139',
-//   dialect: 'mysql',/* one of 'mysql' | 'mariadb' | 'postgres' | 'mssql' */
-// });
-
-const sequelize = new Sequelize('ppobdbdev', 'ppobuserdev', 'fiora0119', {
-  host: '36.95.58.237',
+const sequelize = new Sequelize('ari_ppobdb', 'ari_ppobuser', 'fiora123', {
+  host: '157.230.43.139',
   dialect: 'mysql',/* one of 'mysql' | 'mariadb' | 'postgres' | 'mssql' */
 });
+
+// const sequelize = new Sequelize('ppobdbdev', 'ppobuserdev', 'fiora0119', {
+//   host: '36.95.58.237',
+//   dialect: 'mysql',/* one of 'mysql' | 'mariadb' | 'postgres' | 'mssql' */
+// });
 
 io.on('connection', (socket) => {
   console.log('a user connected');
