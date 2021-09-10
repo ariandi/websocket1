@@ -33,17 +33,17 @@ cron.schedule('*/15 * * * * *', async function() {
 
     const payReq = JSON.parse(pdamDataDet.req_pay);
     const { username, buyer_sku_code, customer_no, ref_id, sign, testing} = payReq;
-    // const payReqDigi = { username, buyer_sku_code, customer_no, ref_id, sign, testing}
+    const payReqDigi = { username, buyer_sku_code, customer_no, ref_id, sign}
     const urlDigi = 'https://api.digiflazz.com/v1/';
 
-    const payReqDigi = {
-      username: payReq.username,
-      buyer_sku_code: "xld10",
-      customer_no: "087800001232",
-      ref_id: payReq.ref_id,
-      sign: payReq.sign,
-      testing: true,
-    }
+    // const payReqDigi = {
+    //   username: payReq.username,
+    //   buyer_sku_code: "xld10",
+    //   customer_no: "087800001232",
+    //   ref_id: payReq.ref_id,
+    //   sign: payReq.sign,
+    //   testing: true,
+    // }
 
     try {
       let billerAdvice = await axios.post(urlDigi + 'transaction', payReqDigi);
