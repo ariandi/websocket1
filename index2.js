@@ -76,6 +76,27 @@ cron.schedule('*/15 * * * * *', async function() {
       console.log(e.response.data);
     }
   }
+
+  const balance_det2 = await BalanceDetails.findOne(
+      {
+        where:
+            {
+              biller_status: 'pending',
+              status: 0,
+              balance_type: {
+                [Op.not]: 5
+              },
+              created_at: {
+                [Op.gt]: moment().subtract(2, 'days').toDate()
+              }
+            }
+      });
+    if (balance_det2) {
+      await BalanceDetails.update({'biller_status': 'success'}, {where:
+            {id: balance_det2.id}}
+      );
+      socket.emit('setTrxStatus', balance_det2);
+    }
 }, {});
 
 app.get('/', (req, res) => {
