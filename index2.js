@@ -64,11 +64,12 @@ cron.schedule('*/15 * * * * *', async function() {
         console.log('balance total', balanceData.balance_total);
         console.log('balance trx', balance_det.balance);
         await Balances.update(
-            {balance_total: balanceData.balance_total - balance_det.balance},
+            {balance_total: balanceData.balance_total + balance_det.balance},
             {where: {id: balance_det.balance_id}}
         );
       }
 
+      billerAdvice.data.data.created_by = balance_det.created_by;
       console.log(billerAdvice.data.data);
       socket.emit('setTrxStatus', billerAdvice.data.data);
       // socket.emit('setTrxStatus', balance_det_res);
