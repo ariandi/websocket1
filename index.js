@@ -10,17 +10,13 @@ const io = require("socket.io")(server, {
     methods: "*"
   }
 });
+require('dotenv').config()
 
 // Option 2: Passing parameters separately (other dialects)
-const sequelize = new Sequelize('ari_ppobdb', 'ari_ppobuser', 'fiora123', {
-  host: '157.230.43.139',
+const sequelize = new Sequelize(process.env.DB_NAME, process.env.DB_USER, process.env.DB_PASS, {
+  host: process.env.DB_HOST,
   dialect: 'mysql',/* one of 'mysql' | 'mariadb' | 'postgres' | 'mssql' */
 });
-
-// const sequelize = new Sequelize('ppobdbdev', 'ppobuserdev', 'fiora0119', {
-//   host: '36.95.58.237',
-//   dialect: 'mysql',/* one of 'mysql' | 'mariadb' | 'postgres' | 'mssql' */
-// });
 
 io.on('connection', (socket) => {
   console.log('a user connected');
@@ -40,8 +36,8 @@ io.on('connection', (socket) => {
   });
 });
 
-server.listen(3005, async () => {
-  console.log('listening on *:3005');
+server.listen(process.env.PORT, async () => {
+  console.log('listening on *:' + process.env.PORT);
   try {
     await sequelize.authenticate();
     console.log('Connection has been established successfully.');

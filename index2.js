@@ -11,6 +11,7 @@ const PdamDataDetail = require('./models/pdam_data_details');
 const moment = require('moment');
 const axios = require('axios');
 const { Op } = require("sequelize");
+require('dotenv').config()
 
 let selamatDateng = 'Hello world';
 
@@ -185,7 +186,7 @@ app.get('/', (req, res) => {
   res.send(selamatDateng);
 });
 
-app.listen(3004, () => {
+app.listen(process.env.PORT2, () => {
   console.log('V Latest');
-  console.log('Listen on 3004');
+  console.log('Listen on ' + process.env.PORT);
 })
