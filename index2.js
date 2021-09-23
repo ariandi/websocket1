@@ -38,6 +38,8 @@ cron.schedule('*/15 * * * * *', async function() {
     const payReqDigi = { username, buyer_sku_code, customer_no, ref_id, sign}
     const urlDigi = 'https://api.digiflazz.com/v1/';
 
+    payReqDigi.testing = true;
+
     // const payReqDigi = {
     //   username: payReq.username,
     //   buyer_sku_code: "xld10",
