@@ -167,5 +167,5 @@ app.get('/', (req, res) => {
 
 app.listen(process.env.PORT2, () => {
   console.log('V Latest');
-  console.log('Listen on ' + process.env.PORT);
+  console.log('Listen on ' + process.env.PORT2);
 })
