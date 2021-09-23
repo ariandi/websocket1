@@ -1,12 +1,6 @@
 const { Sequelize, DataTypes } = require('sequelize');
-// const sequelize = new Sequelize('ppobdbdev', 'ppobuserdev', 'fiora0119', {
-//   host: '36.95.58.237',
-//   dialect: 'mysql',/* one of 'mysql' | 'mariadb' | 'postgres' | 'mssql' */
-//   logging: false,
-// });
-
-const sequelize = new Sequelize('ari_ppobdb', 'ari_ppobuser', 'fiora123', {
-  host: '157.230.43.139',
+const sequelize = new Sequelize(process.env.DB_NAME, process.env.DB_USER, process.env.DB_PASS, {
+  host: process.env.DB_HOST,
   dialect: 'mysql',/* one of 'mysql' | 'mariadb' | 'postgres' | 'mssql' */
   logging: false,
 });
