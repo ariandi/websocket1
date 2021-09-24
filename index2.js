@@ -105,7 +105,7 @@ cron.schedule('*/10 * * * * *', async function() {
       });
     if (balance_det2) {
       if (parseInt(balance_det2.product_id) === 5001) {
-        const pdamData = await PdamData.findOne({where: {txid: balance_det.txid}});
+        const pdamData = await PdamData.findOne({where: {txid: balance_det2.txid}});
         const pdamDataDet = await PdamDataDetail.findOne({where: {pdam_data_id: pdamData.id}});
 
         const payReq = JSON.parse(pdamDataDet.req_pay);
@@ -120,7 +120,7 @@ cron.schedule('*/10 * * * * *', async function() {
           console.log('status transaksi adalah', statusTrx.toLowerCase());
           if (statusTrx.toLowerCase() === 'sukses') {
             await BalanceDetails.update({'biller_status': 'success'}, {where:
-                  {id: balance_det.id}}
+                  {id: balance_det2.id}}
             );
 
             const pdamDataDetUpdate = await PdamDataDetail.update(
@@ -133,18 +133,18 @@ cron.schedule('*/10 * * * * *', async function() {
           } else if (statusTrx.toLowerCase() === 'gagal') {
             await BalanceDetails.update(
                 {biller_status: 'gagal', status: 4},
-                {where: {id: balance_det.id}}
+                {where: {id: balance_det2.id}}
             );
-            const balanceData = await Balances.findOne({where: {id: balance_det.balance_id}});
+            const balanceData = await Balances.findOne({where: {id: balance_det2.balance_id}});
             console.log('balance total', balanceData.balance_total);
-            console.log('balance trx', balance_det.balance);
+            console.log('balance trx', balance_det2.balance);
             await Balances.update(
-                {balance_total: balanceData.balance_total + balance_det.balance},
-                {where: {id: balance_det.balance_id}}
+                {balance_total: balanceData.balance_total + balance_det2.balance},
+                {where: {id: balance_det2.balance_id}}
             );
           }
 
-          billerAdvice.data.data.created_by = balance_det.created_by;
+          billerAdvice.data.data.created_by = balance_det2.created_by;
           console.log(billerAdvice.data.data);
           socket.emit('setTrxStatus', billerAdvice.data.data);
           // socket.emit('setTrxStatus', balance_det_res);
