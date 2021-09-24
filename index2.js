@@ -114,23 +114,23 @@ cron.schedule('*/10 * * * * *', async function() {
 	// console.log(payReq);
 
 	const { username, buyer_sku_code, customer_no, ref_id, sign} = payReq;
-	console.log(username);
-	console.log(buyer_sku_code);
-	console.log(customer_no);
-	console.log(ref_id);
-	console.log(sign);
+	// console.log(username);
+	// console.log(buyer_sku_code);
+	// console.log(customer_no);
+	// console.log(ref_id);
+	// console.log(sign);
 
         const payReqDigi = { username, buyer_sku_code, customer_no, ref_id, sign };
 
-	console.log(payReqDigi);
+	// console.log(payReqDigi);
 
         const urlDigi = 'https://api.digiflazz.com/v1/';
 
-	console.log('payRegDigi', payReqDigi);
+	// console.log('payRegDigi', payReqDigi);
 
         try {
           let billerAdvice = await axios.post(urlDigi + 'transaction', payReqDigi);
-	console.log(billerAdvice);
+	  // console.log(billerAdvice);
           const statusTrx = billerAdvice.data.data.status;
 
           console.log('status transaksi adalah', statusTrx.toLowerCase());
@@ -153,6 +153,12 @@ cron.schedule('*/10 * * * * *', async function() {
                 {biller_status: 'gagal', status: 4},
                 {where: {id: balance_det2.id}}
             );
+
+	    const pdamDataDetUpdate = await PdamDataDetail.update(
+                {data_detail_pay: JSON.stringify(billerAdvice.data)},
+                {where: {pdam_data_id: pdamData.id}}
+            );
+
             const balanceData = await Balances.findOne({where: {id: balance_det2.balance_id}});
             console.log('balance total', balanceData.balance_total);
             console.log('balance trx', balance_det2.balance);
