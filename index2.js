@@ -1,5 +1,5 @@
 const io = require("socket.io-client");
-const socket = io("http://localhost:3005");
+const socket = io("https://websock.madupay.com");
 
 const express = require('express');
 const app = express();
@@ -15,20 +15,26 @@ require('dotenv').config()
 
 let selamatDateng = 'Hello world';
 
-cron.schedule('*/15 * * * * *', async function() {
+cron.schedule('*/10 * * * * *', async function() {
   console.log('running a task every minute');
-  const balance_det = await BalanceDetails.findOne(
-      {
-        where:
-            {
-              biller_status: 'pending',
-              status: 0,
-              balance_type: 5,
-              created_at: {
-                [Op.gt]: moment().subtract(2, 'days').toDate()
+  let balance_det = null;
+  try {
+    balance_det = await BalanceDetails.findOne(
+        {
+          where:
+              {
+                biller_status: 'pending',
+                status: 0,
+                balance_type: 5,
+                created_at: {
+                  [Op.gt]: moment().subtract(2, 'days').toDate()
+                }
               }
-            }
-      });
+        });
+  } catch (e) {
+    console.log(e)
+  }
+
   if (balance_det) {
     const pdamData = await PdamData.findOne({where: {txid: balance_det.txid}});
     const pdamDataDet = await PdamDataDetail.findOne({where: {pdam_data_id: pdamData.id}});
@@ -48,6 +54,8 @@ cron.schedule('*/15 * * * * *', async function() {
     //   sign: payReq.sign,
     //   testing: true,
     // }
+
+    console.log(payReqDigi);
 
     try {
       let billerAdvice = await axios.post(urlDigi + 'transaction', payReqDigi);
