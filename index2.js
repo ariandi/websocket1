@@ -100,36 +100,31 @@ cron.schedule('*/15 * * * * *', async function() {
             }
       });
     if (balance_det2) {
-	console.log(parseInt(balance_det2.product_id));
       if (parseInt(balance_det2.product_id) === 5001) {
-	console.log(123);
         const pdamData = await PdamData.findOne({where: {txid: balance_det2.txid}});
-	console.log(456);
         const pdamDataDet = await PdamDataDetail.findOne({where: {pdam_data_id: pdamData.id}});
-	console.log(789);
-	// console.log(JSON.parse(pdamDataDet.req_pay));
 
-	const payReq = JSON.parse(pdamDataDet.req_pay);
+	      const payReq = JSON.parse(pdamDataDet.req_pay);
 	// console.log(payReq);
 
-	const { username, buyer_sku_code, customer_no, ref_id, sign} = payReq;
-	console.log(username);
-	console.log(buyer_sku_code);
-	console.log(customer_no);
-	console.log(ref_id);
-	console.log(sign);
+	      const { username, buyer_sku_code, customer_no, ref_id, sign} = payReq;
+        // console.log(username);
+        // console.log(buyer_sku_code);
+        // console.log(customer_no);
+        // console.log(ref_id);
+        // console.log(sign);
 
         const payReqDigi = { username, buyer_sku_code, customer_no, ref_id, sign };
 
-	console.log(payReqDigi);
+        // console.log(payReqDigi);
 
         const urlDigi = 'https://api.digiflazz.com/v1/';
 
-	console.log('payRegDigi', payReqDigi);
+	      // console.log('payRegDigi', payReqDigi);
 
         try {
           let billerAdvice = await axios.post(urlDigi + 'transaction', payReqDigi);
-	console.log(billerAdvice);
+	        console.log(billerAdvice);
           const statusTrx = billerAdvice.data.data.status;
 
           console.log('status transaksi adalah', statusTrx.toLowerCase());
@@ -138,7 +133,7 @@ cron.schedule('*/15 * * * * *', async function() {
                   {id: balance_det2.id}}
             );
 
-		console.log('sukses balance details');
+		        console.log('sukses balance details');
 
             const pdamDataDetUpdate = await PdamDataDetail.update(
                 {data_detail_pay: JSON.stringify(billerAdvice.data)},
