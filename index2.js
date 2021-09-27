@@ -66,6 +66,14 @@ cron.schedule('*/10 * * * * *', async function() {
         await BalanceDetails.update({'biller_status': 'success'}, {where:
               {id: balance_det.id}}
         );
+
+        const pdamData = await PdamData.findOne({where: {txid: balance_det.txid}});
+        const pdamDataDetUpdate = await PdamDataDetail.update(
+            {data_detail_pay: JSON.stringify(billerAdvice.data)},
+            {where: {pdam_data_id: pdamData.id}}
+        );
+        console.log(pdamDataDetUpdate);
+
       } else if (statusTrx.toLowerCase() === 'gagal') {
         await BalanceDetails.update(
             {biller_status: 'gagal', status: 4},
