@@ -112,79 +112,79 @@ cron.schedule('*/10 * * * * *', async function() {
             }
       });
     if (balance_det2) {
-      console.log(parseInt(balance_det2.product_id));
-          if (parseInt(balance_det2.product_id) === 5001) {
+          console.log(parseInt(balance_det2.product_id));
+          if (parseInt(balance_det2.product_id) === 5001 || parseInt(balance_det2.product_id) === 6001) {
             const pdamData = await PdamData.findOne({where: {txid: balance_det2.txid}});
             const pdamDataDet = await PdamDataDetail.findOne({where: {pdam_data_id: pdamData.id}});
-      // console.log(JSON.parse(pdamDataDet.req_pay));
+            // console.log(JSON.parse(pdamDataDet.req_pay));
 
-      const payReq = JSON.parse(pdamDataDet.req_pay);
-      // console.log(payReq);
+            const payReq = JSON.parse(pdamDataDet.req_pay);
+            // console.log(payReq);
 
-      const { username, buyer_sku_code, customer_no, ref_id, sign} = payReq;
-      // console.log(username);
-      // console.log(buyer_sku_code);
-      // console.log(customer_no);
-      // console.log(ref_id);
-      // console.log(sign);
+            const { username, buyer_sku_code, customer_no, ref_id, sign} = payReq;
+            // console.log(username);
+            // console.log(buyer_sku_code);
+            // console.log(customer_no);
+            // console.log(ref_id);
+            // console.log(sign);
 
-      const payReqDigi = { username, buyer_sku_code, customer_no, ref_id, sign };
+            const payReqDigi = { username, buyer_sku_code, customer_no, ref_id, sign };
 
-    	// console.log(payReqDigi);
+            // console.log(payReqDigi);
 
-      const urlDigi = 'https://api.digiflazz.com/v1/';
+            const urlDigi = 'https://api.digiflazz.com/v1/';
 
-	    // console.log('payRegDigi', payReqDigi);
+            // console.log('payRegDigi', payReqDigi);
 
-        try {
-          let billerAdvice = await axios.post(urlDigi + 'transaction', payReqDigi);
-	        // console.log(billerAdvice);
-          const statusTrx = billerAdvice.data.data.status;
+            try {
+              let billerAdvice = await axios.post(urlDigi + 'transaction', payReqDigi);
+              // console.log(billerAdvice);
+              const statusTrx = billerAdvice.data.data.status;
 
-          console.log('status transaksi adalah', statusTrx.toLowerCase());
-          if (statusTrx.toLowerCase() === 'sukses') {
-            await BalanceDetails.update({'biller_status': 'success'}, {where:
-                  {id: balance_det2.id}}
-            );
+              console.log('status transaksi adalah', statusTrx.toLowerCase());
+              if (statusTrx.toLowerCase() === 'sukses') {
+                await BalanceDetails.update({'biller_status': 'success'}, {where:
+                      {id: balance_det2.id}}
+                );
 
-            console.log('sukses balance details');
+                console.log('sukses balance details');
 
-            const pdamDataDetUpdate = await PdamDataDetail.update(
-                {data_detail_pay: JSON.stringify(billerAdvice.data)},
-                {where: {pdam_data_id: pdamData.id}}
-            );
+                const pdamDataDetUpdate = await PdamDataDetail.update(
+                    {data_detail_pay: JSON.stringify(billerAdvice.data)},
+                    {where: {pdam_data_id: pdamData.id}}
+                );
 
-            console.log(pdamDataDetUpdate);
+                console.log(pdamDataDetUpdate);
 
-          } else if (statusTrx.toLowerCase() === 'gagal') {
-            await BalanceDetails.update(
-                {biller_status: 'gagal', status: 4},
-                {where: {id: balance_det2.id}}
-            );
+              } else if (statusTrx.toLowerCase() === 'gagal') {
+                await BalanceDetails.update(
+                    {biller_status: 'gagal', status: 4},
+                    {where: {id: balance_det2.id}}
+                );
 
-            const pdamDataDetUpdate = await PdamDataDetail.update(
-                      {data_detail_pay: JSON.stringify(billerAdvice.data)},
-                      {where: {pdam_data_id: pdamData.id}}
-                  );
+                const pdamDataDetUpdate = await PdamDataDetail.update(
+                          {data_detail_pay: JSON.stringify(billerAdvice.data)},
+                          {where: {pdam_data_id: pdamData.id}}
+                      );
 
-            console.log(pdamDataDetUpdate);
+                console.log(pdamDataDetUpdate);
 
-            const balanceData = await Balances.findOne({where: {id: balance_det2.balance_id}});
-            console.log('balance total', balanceData.balance_total);
-            console.log('balance trx', balance_det2.balance);
-            await Balances.update(
-                {balance_total: balanceData.balance_total + balance_det2.balance},
-                {where: {id: balance_det2.balance_id}}
-            );
-          }
+                const balanceData = await Balances.findOne({where: {id: balance_det2.balance_id}});
+                console.log('balance total', balanceData.balance_total);
+                console.log('balance trx', balance_det2.balance);
+                await Balances.update(
+                    {balance_total: balanceData.balance_total + balance_det2.balance},
+                    {where: {id: balance_det2.balance_id}}
+                );
+              }
 
-          billerAdvice.data.data.created_by = balance_det2.created_by;
-          console.log(billerAdvice.data.data);
-          socket.emit('setTrxStatus', billerAdvice.data.data);
-          // socket.emit('setTrxStatus', balance_det_res);
-        } catch (e) {
-          console.log(e.response.data);
-        }
+              billerAdvice.data.data.created_by = balance_det2.created_by;
+              console.log(billerAdvice.data.data);
+              socket.emit('setTrxStatus', billerAdvice.data.data);
+              // socket.emit('setTrxStatus', balance_det_res);
+            } catch (e) {
+              console.log(e.response.data);
+            }
 
       } else {
         await BalanceDetails.update({'biller_status': 'success'}, {where:
