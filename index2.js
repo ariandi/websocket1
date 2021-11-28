@@ -113,7 +113,8 @@ cron.schedule('*/10 * * * * *', async function() {
       });
     if (balance_det2) {
           console.log(parseInt(balance_det2.product_id));
-          if (parseInt(balance_det2.product_id) === 5001 || parseInt(balance_det2.product_id) === 6001) {
+          if (parseInt(balance_det2.product_id) === 5001 || parseInt(balance_det2.product_id) === 6001 ||
+              parseInt(balance_det2.balance_type) === 19 || parseInt(balance_det2.balance_type) === 20 ) {
             const pdamData = await PdamData.findOne({where: {txid: balance_det2.txid}});
             const pdamDataDet = await PdamDataDetail.findOne({where: {pdam_data_id: pdamData.id}});
             // console.log(JSON.parse(pdamDataDet.req_pay));
